@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Define source files
 set(SOURCES
     src/main.cpp
+    src/proc.cpp
 )
 
 # Create the executable

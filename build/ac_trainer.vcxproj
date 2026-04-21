@@ -412,6 +412,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <ClCompile Include="C:\Work\personal\ac_trainer\src\proc.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
     <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Debug\cmake_pch.hxx" />
     <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Release\cmake_pch.hxx" />
     <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\MinSizeRel\cmake_pch.hxx" />

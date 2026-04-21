@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Work\personal\ac_trainer\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Work\personal\ac_trainer\src\proc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Debug\cmake_pch.hxx">

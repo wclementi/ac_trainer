@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "ac_trainer.dir\\Debug\\proc.obj",
+            "outputs": [
+                "C:\\Work\\personal\\ac_trainer\\build\\ac_trainer.dir\\Debug\\vc143.pdb",
+                "ac_trainer.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

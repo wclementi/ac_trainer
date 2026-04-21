@@ -4,7 +4,9 @@
         "Source": "c:\\work\\personal\\ac_trainer\\src\\main.cpp",
         "ProvidedModule": "",
         "PCH": "c:\\work\\personal\\ac_trainer\\build\\ac_trainer.dir\\debug\\cmake_pch.pch",
-        "Includes": [],
+        "Includes": [
+            "c:\\work\\personal\\ac_trainer\\headers\\proc.h"
+        ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
     }
