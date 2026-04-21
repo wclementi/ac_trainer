@@ -1,0 +1,11 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\work\\personal\\ac_trainer\\src\\main.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\work\\personal\\ac_trainer\\build\\ac_trainer.dir\\debug\\cmake_pch.pch",
+        "Includes": [],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

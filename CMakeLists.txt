@@ -23,3 +23,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i
 
 # Specify the precompiled header
 target_precompile_headers(${PROJECT_NAME} PRIVATE include/stdafx.h)
+
+# Require Administrator privileges on Windows for memory reading/writing
+if(MSVC)
+    target_link_options(${PROJECT_NAME} PRIVATE "/MANIFESTUAC:level='requireAdministrator' uiAccess='false'")
+endif()

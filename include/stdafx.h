@@ -6,3 +6,8 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+
+// Windows API headers
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <tlhelp32.h>
