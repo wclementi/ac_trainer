@@ -7,8 +7,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Add headers directory to include path
-include_directories(include)
+# Global include directories are omitted in favor of target_include_directories
 
 # Define source files
 set(SOURCES
@@ -18,8 +17,11 @@ set(SOURCES
 # Create the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Include headers folder
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# Include directories for precompiled and standard headers
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/headers
+)
 
 # Specify the precompiled header
 target_precompile_headers(${PROJECT_NAME} PRIVATE include/stdafx.h)

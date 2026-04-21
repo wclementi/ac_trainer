@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/ac_trainer.exe"
+			"path" : "RelWithDebInfo/ac_trainer.exe"
 		},
 		{
-			"path" : "MinSizeRel/ac_trainer.pdb"
+			"path" : "RelWithDebInfo/ac_trainer.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -15,7 +15,7 @@
 		[
 			"add_executable",
 			"target_link_options",
-			"include_directories",
+			"target_include_directories",
 			"target_precompile_headers"
 		],
 		"files" : 
@@ -30,25 +30,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 19,
+				"line" : 18,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 29,
+				"line" : 31,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 11,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 25,
+				"line" : 27,
 				"parent" : 0
 			}
 		]
@@ -64,10 +64,10 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -std:c++latest -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob1 /DNDEBUG -std:c++latest -MD -Zi"
 				},
 				{
-					"fragment" : "/YcC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx /FpC:/Work/personal/ac_trainer/build/ac_trainer.dir/MinSizeRel//cmake_pch.pch /FIC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx"
+					"fragment" : "/YcC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx /FpC:/Work/personal/ac_trainer/build/ac_trainer.dir/RelWithDebInfo//cmake_pch.pch /FIC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx"
 				}
 			],
 			"defines" : 
@@ -81,6 +81,10 @@
 				{
 					"backtrace" : 3,
 					"path" : "C:/Work/personal/ac_trainer/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Work/personal/ac_trainer/headers"
 				}
 			],
 			"language" : "CXX",
@@ -108,10 +112,10 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -std:c++latest -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob1 /DNDEBUG -std:c++latest -MD -Zi"
 				},
 				{
-					"fragment" : "/YuC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx /FpC:/Work/personal/ac_trainer/build/ac_trainer.dir/MinSizeRel//cmake_pch.pch /FIC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/MinSizeRel/cmake_pch.hxx"
+					"fragment" : "/YuC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx /FpC:/Work/personal/ac_trainer/build/ac_trainer.dir/RelWithDebInfo//cmake_pch.pch /FIC:/Work/personal/ac_trainer/build/CMakeFiles/ac_trainer.dir/RelWithDebInfo/cmake_pch.hxx"
 				}
 			],
 			"defines" : 
@@ -125,6 +129,10 @@
 				{
 					"backtrace" : 3,
 					"path" : "C:/Work/personal/ac_trainer/include"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Work/personal/ac_trainer/headers"
 				}
 			],
 			"language" : "CXX",
@@ -161,11 +169,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob1 /DNDEBUG -MD -Zi",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/INCREMENTAL:NO",
+				"fragment" : "/debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{

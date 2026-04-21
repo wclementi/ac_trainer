@@ -1,0 +1,2 @@
+# This file ensures the headers directory is tracked by version control.
+# Any new .h files created during development should be placed in this folder.
