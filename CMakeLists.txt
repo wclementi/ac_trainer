@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Export compile commands for IDE integration (fixes "Too many errors emitted")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Global include directories are omitted in favor of target_include_directories
 
 # Define source files
