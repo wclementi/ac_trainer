@@ -2,13 +2,13 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Work\personal\ac_trainer\build\Debug\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\wielg\work\personal\ac_trainer\build\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Work\personal\ac_trainer\build\Debug\ac_trainer.exe</FullPath>
+      <FullPath>C:\Users\wielg\work\personal\ac_trainer\build\Debug\ac_trainer.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Work\personal\ac_trainer\build\Debug\ALL_BUILD</FullPath>
+      <FullPath>C:\Users\wielg\work\personal\ac_trainer\build\Debug\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

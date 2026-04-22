@@ -1,6 +1,6 @@
-^C:\WORK\PERSONAL\AC_TRAINER\BUILD\CMAKEFILES\78C8F8F3EEF5790564AB4FBF83CA4487\GENERATE.STAMP.RULE
+^C:\USERS\WIELG\WORK\PERSONAL\AC_TRAINER\BUILD\CMAKEFILES\10E6DAF4AA1DCA477C3134C50757D853\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Work/personal/ac_trainer -BC:/Work/personal/ac_trainer/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Work/personal/ac_trainer/build/ac_trainer.sln
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/wielg/work/personal/ac_trainer -BC:/Users/wielg/work/personal/ac_trainer/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/wielg/work/personal/ac_trainer/build/ac_trainer.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

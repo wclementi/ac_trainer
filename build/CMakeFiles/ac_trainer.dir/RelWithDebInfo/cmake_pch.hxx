@@ -2,5 +2,5 @@
 
 #pragma system_header
 #ifdef __cplusplus
-#include "C:/Work/personal/ac_trainer/include/stdafx.h"
+#include "C:/Users/wielg/work/personal/ac_trainer/include/stdafx.h"
 #endif // __cplusplus

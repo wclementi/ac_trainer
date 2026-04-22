@@ -1,39 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\cmake_pch.cxx">
+    <ClCompile Include="C:\Users\wielg\work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\cmake_pch.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Work\personal\ac_trainer\src\main.cpp">
+    <ClCompile Include="C:\Users\wielg\work\personal\ac_trainer\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Work\personal\ac_trainer\src\proc.cpp">
+    <ClCompile Include="C:\Users\wielg\work\personal\ac_trainer\src\proc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Debug\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\wielg\work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Debug\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Release\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\wielg\work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\MinSizeRel\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\wielg\work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\MinSizeRel\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\RelWithDebInfo\cmake_pch.hxx">
+    <ClInclude Include="C:\Users\wielg\work\personal\ac_trainer\build\CMakeFiles\ac_trainer.dir\RelWithDebInfo\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Work\personal\ac_trainer\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\wielg\work\personal\ac_trainer\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile Header File">
-      <UniqueIdentifier>{8585F695-63C0-3157-875B-674C8F8C4925}</UniqueIdentifier>
+      <UniqueIdentifier>{44F6E780-89A5-388F-9E8D-2D23DCB4D10A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{BDF5B14D-1D0D-3FDA-9E49-F7C3CC00E470}</UniqueIdentifier>
+      <UniqueIdentifier>{6DC52D88-D59F-32B6-BC9B-37E90CC6201B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
