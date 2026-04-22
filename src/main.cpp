@@ -5,7 +5,7 @@
 int main() {
     std::cout << "--- Process Memory Wrapper Test ---" << std::endl;
     
-    const wchar_t* targetProc = L"firefox.exe";
+    const wchar_t* targetProc = L"ac_client.exe";
     std::wcout << L"Attempting to attach to " << targetProc << L"..." << std::endl;
     
     // Instantiate the Process object
@@ -28,10 +28,39 @@ int main() {
             std::cout << "[+] Reading first 2 bytes from base address (should be 0x5A4D / 'MZ'): 0x" 
                       << std::hex << magicNumber << std::dec << std::endl;
             
-            // Test: Dummy DMA Addy simulation
-            std::cout << "\n--- Testing FindDMAAddy (Information only) ---" << std::endl;
-            std::cout << "[*] To resolve a pointer chain, use: target.FindDMAAddy(baseAddr + ptrOffset, {offset1, offset2});" << std::endl;
-            std::cout << "[*] Example: target.FindDMAAddy(baseAddr + 0x10f4f4, {0x374, 0x14, 0x0});" << std::endl;
+            // Test: Resolving Local Player Health (Assault Cube 1.3.0.2)
+            std::cout << "\n--- Testing Local Player Health (FindDMAAddy + Read/Write) ---" << std::endl;
+            
+            // The static offset to the local player object from the module base
+            uintptr_t localPlayerPtrAddr = baseAddr + 0x10F4F4; 
+            
+            // The health variable is at offset 0xF8 within the local player object
+            std::vector<unsigned int> healthOffsets = {0xF8}; 
+            
+            // Resolve the full DMA address pointing to the actual health variable
+            uintptr_t healthAddr = target.FindDMAAddy(localPlayerPtrAddr, healthOffsets);
+            
+            if (healthAddr) {
+                std::cout << "[+] Resolved Health Address: 0x" << std::hex << healthAddr << std::dec << std::endl;
+                
+                // Read current health
+                int currentHealth = target.Read<int>(healthAddr);
+                std::cout << "[+] Current Health: " << currentHealth << std::endl;
+                
+                // Write new health (e.g., God Mode / 1337 health)
+                int newHealth = 1337;
+                if (target.Write<int>(healthAddr, newHealth)) {
+                    std::cout << "[+] Successfully wrote " << newHealth << " to Health!" << std::endl;
+                    
+                    // Verify the write
+                    int verifiedHealth = target.Read<int>(healthAddr);
+                    std::cout << "[+] Verified New Health: " << verifiedHealth << std::endl;
+                } else {
+                    std::cout << "[-] Failed to write to Health address." << std::endl;
+                }
+            } else {
+                std::cout << "[-] Failed to resolve Health pointer chain. (Is the player spawned in a map?)" << std::endl;
+            }
 
         } else {
             std::cout << "[-] Failed to find module base address. (Is the target a 64-bit process while we are 32-bit?)" << std::endl;
