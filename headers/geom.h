@@ -25,3 +25,4 @@ struct Matrix {
 
 float GetDistance(const Vec3& src, const Vec3& dst);
 Vec3 CalcAngle(const Vec3& src, const Vec3& dst);
+bool WorldToScreen(const Vec3& pos, Vec2& screen, float matrix[16], int windowWidth, int windowHeight);
