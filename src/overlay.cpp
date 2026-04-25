@@ -154,10 +154,28 @@ void Overlay::EndFrame() {
 void Overlay::UpdateOverlayPosition(HWND targetHwnd) {
     if (!targetHwnd) return;
 
-    RECT rect;
-    if (GetWindowRect(targetHwnd, &rect)) {
-        screenWidth = rect.right - rect.left;
-        screenHeight = rect.bottom - rect.top;
-        SetWindowPos(hwnd, HWND_TOPMOST, rect.left, rect.top, screenWidth, screenHeight, SWP_SHOWWINDOW);
+    RECT clientRect;
+    if (GetClientRect(targetHwnd, &clientRect)) {
+        int newWidth = clientRect.right - clientRect.left;
+        int newHeight = clientRect.bottom - clientRect.top;
+
+        POINT topLeft = { 0, 0 };
+        ClientToScreen(targetHwnd, &topLeft);
+
+        // Check if size changed to resize swapchain buffers
+        if (newWidth != screenWidth || newHeight != screenHeight) {
+            screenWidth = newWidth;
+            screenHeight = newHeight;
+
+            if (g_pSwapChain) {
+                CleanupRenderTarget();
+                g_pSwapChain->ResizeBuffers(0, screenWidth, screenHeight, DXGI_FORMAT_UNKNOWN, 0);
+                CreateRenderTarget();
+            }
+        }
+
+        // Position overlay to match the client area exactly
+        // Use SWP_NOACTIVATE to prevent the overlay from taking focus from the game
+        SetWindowPos(hwnd, HWND_TOPMOST, topLeft.x, topLeft.y, screenWidth, screenHeight, SWP_NOACTIVATE | SWP_SHOWWINDOW);
     }
 }

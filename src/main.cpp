@@ -8,6 +8,9 @@
 #include <chrono>
 
 int main() {
+    // Ensure the process is DPI aware so our coordinates match the game's window exactly
+    SetProcessDPIAware();
+    
     std::cout << "--- Assault Cube External ESP ---" << std::endl;
 
     const wchar_t* targetProc = L"ac_client.exe";
