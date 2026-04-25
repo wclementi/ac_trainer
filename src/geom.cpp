@@ -36,8 +36,8 @@ bool WorldToScreen(const Vec3& pos, Vec2& screen, float matrix[16], int windowWi
     NDC.z = clipCoords.z / clipCoords.w;
 
     // Transform NDC to window coordinates
-    screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
-    screen.y = -(windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
+    screen.x = (windowWidth / 2 * NDC.x) + (windowWidth / 2);
+    screen.y = -(windowHeight / 2 * NDC.y) + (windowHeight / 2);
     
     return true;
 }

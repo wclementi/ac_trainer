@@ -9,6 +9,7 @@ namespace offsets {
     constexpr std::ptrdiff_t entityList = 0x18AC04;
     constexpr std::ptrdiff_t playerCount = 0x18AC0C;
     constexpr std::ptrdiff_t fov = 0x18A7CC;
+    constexpr std::ptrdiff_t viewMatrix = 0x17DFD0; // 4x4 matrix
 
     // Player Entity Offsets (Relative to LocalPlayer or Entity Base)
     constexpr std::ptrdiff_t headPos = 0x4;        // Vec3
