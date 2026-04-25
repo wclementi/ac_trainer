@@ -16,6 +16,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
     src/main.cpp
     src/proc.cpp
+    src/geom.cpp
 )
 
 # Create the executable
