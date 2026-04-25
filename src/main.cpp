@@ -1,24 +1,24 @@
-// Note: stdafx.h is included automatically by CMake via
-// target_precompile_headers
+// Note: stdafx.h is included automatically by CMake via target_precompile_headers
 #include "proc.h"
 #include "entity.h"
 #include "offsets.h"
+#include "overlay.h"
 #include <iostream>
-#include <iomanip>
 #include <thread>
 #include <chrono>
-#include <conio.h>
 
 int main() {
-    std::cout << "--- Assault Cube LocalPlayer Tracker ---" << std::endl;
+    // Ensure the process is DPI aware so our coordinates match the game's window exactly
+    SetProcessDPIAware();
+    
+    std::cout << "--- Assault Cube External ESP ---" << std::endl;
 
-    const wchar_t *targetProc = L"ac_client.exe";
+    const wchar_t* targetProc = L"ac_client.exe";
     Process target(targetProc);
 
     if (!target.IsAttached()) {
         std::wcout << L"[-] Failed to attach to " << targetProc << L". Ensure the game is running." << std::endl;
-        std::cout << "Press any key to exit..." << std::endl;
-        _getch();
+        std::this_thread::sleep_for(std::chrono::seconds(3));
         return 1;
     }
 
@@ -32,70 +32,96 @@ int main() {
 
     std::wcout << L"[+] " << targetProc << L" base address: 0x" << std::hex << baseAddr << std::dec << std::endl;
 
-    Entity localPlayer{};
-    
-    // The local player base pointer is at ac_client.exe + offsets::localPlayer
-    localPlayer.baseAddress = target.Read<uintptr_t>(baseAddr + offsets::localPlayer);
-
-    if (!localPlayer.baseAddress) {
-        std::cout << "[-] Failed to resolve local player base address." << std::endl;
+    HWND targetHwnd = FindWindowW(nullptr, L"AssaultCube");
+    if (!targetHwnd) {
+        std::cout << "[-] Failed to find AssaultCube window." << std::endl;
         return 1;
     }
 
-    std::cout << "[+] Local Player Address: 0x" << std::hex << localPlayer.baseAddress << std::dec << std::endl;
-    std::cout << "\nStarting live tracker. Press any key to stop...\n" << std::endl;
-    
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    _getch();
-    while (!_kbhit()) {
-        // Read memory into localPlayer object
-        localPlayer.health = target.Read<int>(localPlayer.baseAddress + offsets::health);
-        localPlayer.armor = target.Read<int>(localPlayer.baseAddress + offsets::armor);
-        localPlayer.team = target.Read<int>(localPlayer.baseAddress + offsets::team);
-        
-        localPlayer.headPos = target.Read<Vec3>(localPlayer.baseAddress + offsets::headPos);
-        localPlayer.feetPos = target.Read<Vec3>(localPlayer.baseAddress + offsets::feetPos);
-        localPlayer.viewAngles = target.Read<Vec3>(localPlayer.baseAddress + offsets::viewAngles);
+    Overlay overlay(L"AC_ESP_Overlay", L"AC_ESP_Class");
+    std::cout << "[+] Overlay initialized. ESP is active!" << std::endl;
 
-        // Name is an array of chars, read manually
-        ReadProcessMemory(target.GetHandle(), (LPCVOID)(localPlayer.baseAddress + offsets::name), localPlayer.name, sizeof(localPlayer.name), nullptr);
-        localPlayer.name[15] = '\0'; // Ensure null termination
+    while (overlay.StartFrame()) {
+        // Track the game window
+        overlay.UpdateOverlayPosition(targetHwnd);
 
-        // Clear console screen (Windows specific)
-        system("cls");
+        // Read global variables
+        int playerCount = target.Read<int>(baseAddr + offsets::playerCount);
+        uint32_t entList = target.Read<uint32_t>(baseAddr + offsets::entityList);
+        uint32_t localPlayer = target.Read<uint32_t>(baseAddr + offsets::localPlayer);
 
-        std::cout << "=== Local Player Info ===" << std::endl;
-        std::cout << "Name: " << localPlayer.name << std::endl;
-        std::cout << "Team: " << localPlayer.team << std::endl;
-        std::cout << "Health: " << localPlayer.health << std::endl;
-        std::cout << "Armor: " << localPlayer.armor << std::endl;
-        std::cout << "Alive: " << (localPlayer.IsAlive() ? "Yes" : "No") << std::endl;
-        
-        std::cout << std::fixed << std::setprecision(2);
-        std::cout << "\nHead Position: X: " << localPlayer.headPos.x 
-                  << " | Y: " << localPlayer.headPos.y 
-                  << " | Z: " << localPlayer.headPos.z << std::endl;
-                  
-        std::cout << "Feet Position: X: " << localPlayer.feetPos.x 
-                  << " | Y: " << localPlayer.feetPos.y 
-                  << " | Z: " << localPlayer.feetPos.z << std::endl;
+        float matrix[16];
+        if (target.GetHandle()) {
+            ReadProcessMemory(target.GetHandle(), (LPCVOID)(baseAddr + offsets::viewMatrix), &matrix, sizeof(matrix), nullptr);
+        }
 
-        // Note: ViewAngles might be X=Yaw, Y=Pitch, Z=Roll
-        std::cout << "View Angles:   X: " << localPlayer.viewAngles.x 
-                  << " | Y: " << localPlayer.viewAngles.y 
-                  << " | Z: " << localPlayer.viewAngles.z << std::endl;
+        // Validate local player
+        if (!localPlayer) {
+            overlay.EndFrame();
+            continue;
+        }
+        int localTeam = target.Read<int>(localPlayer + offsets::team);
 
-        std::cout << "\nPress any key to exit..." << std::endl;
+        // Loop through entities (1 to playerCount)
+        for (int i = 1; i < playerCount; ++i) {
+            uint32_t entPtr = target.Read<uint32_t>(entList + i * 4);
+            if (!entPtr) continue;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            Entity ent;
+            ent.health = target.Read<int>(entPtr + offsets::health);
+            
+            // Basic alive check
+            if (ent.health <= 0 || ent.health > 100) continue;
+
+            ent.team = target.Read<int>(entPtr + offsets::team);
+            ent.headPos = target.Read<Vec3>(entPtr + offsets::headPos);
+            ent.feetPos = target.Read<Vec3>(entPtr + offsets::feetPos);
+
+            // Slightly increase head height for the box top
+            Vec3 topPos = ent.headPos;
+            topPos.z += 0.5f;
+
+            Vec2 screenTop, screenBot;
+            if (WorldToScreen(topPos, screenTop, matrix, overlay.GetWidth(), overlay.GetHeight()) &&
+                WorldToScreen(ent.feetPos, screenBot, matrix, overlay.GetWidth(), overlay.GetHeight())) {
+
+                float height = screenBot.y - screenTop.y;
+                float width = height / 2.0f;
+
+                // Color based on team
+                ImU32 boxColor = (ent.team == localTeam) ? IM_COL32(0, 255, 0, 255) : IM_COL32(255, 0, 0, 255);
+
+                // Draw Box
+                ImGui::GetBackgroundDrawList()->AddRect(
+                    ImVec2(screenTop.x - width / 2, screenTop.y),
+                    ImVec2(screenTop.x + width / 2, screenBot.y),
+                    boxColor,
+                    0.0f, 0, 1.5f
+                );
+
+                // Draw Health Bar
+                float healthPct = ent.health / 100.0f;
+                float healthHeight = height * healthPct;
+                
+                // Red background for lost health
+                ImGui::GetBackgroundDrawList()->AddRectFilled(
+                    ImVec2(screenTop.x - width / 2 - 5, screenTop.y),
+                    ImVec2(screenTop.x - width / 2 - 2, screenBot.y),
+                    IM_COL32(255, 0, 0, 255)
+                );
+                
+                // Green foreground for current health
+                ImGui::GetBackgroundDrawList()->AddRectFilled(
+                    ImVec2(screenTop.x - width / 2 - 5, screenBot.y - healthHeight),
+                    ImVec2(screenTop.x - width / 2 - 2, screenBot.y),
+                    IM_COL32(0, 255, 0, 255)
+                );
+            }
+        }
+
+        overlay.EndFrame();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Save some CPU
     }
-
-    // Consume the key press that broke the loop
-    _getch();
-
-    // Clear screen on exit
-    system("cls");
-    std::cout << "Exiting live tracker..." << std::endl;
 
     return 0;
 }
