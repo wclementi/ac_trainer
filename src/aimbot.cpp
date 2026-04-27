@@ -31,10 +31,11 @@ uint32_t Aimbot::GetBestTarget(uintptr_t baseAddr, uint32_t localPlayer, int loc
     int playerCount = target.Read<int>(baseAddr + offsets::playerCount);
     uint32_t entList = target.Read<uint32_t>(baseAddr + offsets::entityList);
 
-    Vec3 localPos = target.Read<Vec3>(localPlayer + offsets::feetPos);
+    Vec3 localHead = target.Read<Vec3>(localPlayer + offsets::headPos);
+    Vec3 currentAngles = target.Read<Vec3>(localPlayer + offsets::viewAngles);
     
     uint32_t bestTarget = 0;
-    float closestDistance = std::numeric_limits<float>::max();
+    float closestAngleDistance = std::numeric_limits<float>::max();
 
     for (int i = 1; i < playerCount; ++i) {
         uint32_t entPtr = target.Read<uint32_t>(entList + i * 4);
@@ -46,11 +47,19 @@ uint32_t Aimbot::GetBestTarget(uintptr_t baseAddr, uint32_t localPlayer, int loc
         int team = target.Read<int>(entPtr + offsets::team);
         if (team == localTeam) continue;
 
-        Vec3 entPos = target.Read<Vec3>(entPtr + offsets::feetPos);
-        float distance = GetDistance(localPos, entPos);
+        Vec3 entHead = target.Read<Vec3>(entPtr + offsets::headPos);
+        Vec3 requiredAngles = CalcAngle(localHead, entHead);
 
-        if (distance < closestDistance) {
-            closestDistance = distance;
+        // Calculate angle distance (FOV distance)
+        float diffYaw = std::abs(currentAngles.x - requiredAngles.x);
+        if (diffYaw > 180.0f) diffYaw = 360.0f - diffYaw;
+
+        float diffPitch = std::abs(currentAngles.y - requiredAngles.y);
+        
+        float angleDistance = std::sqrt(diffYaw * diffYaw + diffPitch * diffPitch);
+
+        if (angleDistance < closestAngleDistance) {
+            closestAngleDistance = angleDistance;
             bestTarget = entPtr;
         }
     }
