@@ -11,6 +11,7 @@ class Process {
 private:
     DWORD procId;
     HANDLE hProcess;
+    uintptr_t baseAddress;
 
     // Internal helper to find the process ID by name
     DWORD GetProcId(const wchar_t* procName);
@@ -47,8 +48,16 @@ public:
         return false;
     }
 
+    bool ReadBuffer(uintptr_t address, void* buffer, size_t size) {
+        if (hProcess) {
+            return ReadProcessMemory(hProcess, (LPCVOID)address, buffer, size, nullptr) != 0;
+        }
+        return false;
+    }
+
     // Accessors
     DWORD GetId() const { return procId; }
     HANDLE GetHandle() const { return hProcess; }
-    bool IsAttached() const { return hProcess != nullptr; }
+    uintptr_t GetBaseAddress() const { return baseAddress; }
+    bool IsAttached() const { return hProcess != nullptr && hProcess != INVALID_HANDLE_VALUE; }
 };

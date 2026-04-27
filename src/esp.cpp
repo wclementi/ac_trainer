@@ -3,43 +3,17 @@
 #include "offsets.h"
 #include <iostream>
 
-ESP::ESP(Process& target, Overlay& overlay) : target(target), overlay(overlay) {}
+ESP::ESP(Game& game, Overlay& overlay) : game(game), overlay(overlay) {}
 
 void ESP::Render() {
-    uintptr_t baseAddr = target.GetModuleBaseAddress(L"ac_client.exe");
-    if (!baseAddr) return;
+    const auto& state = game.GetState();
 
-    int playerCount = target.Read<int>(baseAddr + offsets::playerCount);
-    uint32_t entList = target.Read<uint32_t>(baseAddr + offsets::entityList);
-    uint32_t localPlayer = target.Read<uint32_t>(baseAddr + offsets::localPlayer);
-
-    if (!localPlayer) return;
-
-    float matrix[16];
-    if (target.GetHandle()) {
-        ReadProcessMemory(target.GetHandle(), (LPCVOID)(baseAddr + offsets::viewMatrix), &matrix, sizeof(matrix), nullptr);
-    }
-
-    int localTeam = target.Read<int>(localPlayer + offsets::team);
-
-    for (int i = 1; i < playerCount; ++i) {
-        uint32_t entPtr = target.Read<uint32_t>(entList + i * 4);
-        if (!entPtr) continue;
-
-        Entity ent;
-        ent.health = target.Read<int>(entPtr + offsets::health);
-        
-        if (!ent.IsAlive()) continue;
-
-        ent.team = target.Read<int>(entPtr + offsets::team);
-        ent.headPos = target.Read<Vec3>(entPtr + offsets::headPos);
-        ent.feetPos = target.Read<Vec3>(entPtr + offsets::feetPos);
-
-        DrawBox(ent, localTeam, matrix);
+    for (const auto& ent : state.entities) {
+        DrawBox(ent, state.localTeam, state.viewMatrix);
     }
 }
 
-void ESP::DrawBox(const Entity& ent, int localTeam, float matrix[16]) {
+void ESP::DrawBox(const Entity& ent, int localTeam, const Matrix& matrix) {
     Vec3 topPos = ent.headPos;
     topPos.z += 0.5f;
 

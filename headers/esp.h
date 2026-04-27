@@ -1,20 +1,19 @@
 #pragma once
-#include "proc.h"
-#include "entity.h"
+#include "game.h"
 #include "overlay.h"
-#include "geom.h"
+#include "imgui.h"
 #include <vector>
 
 class ESP {
 public:
-    ESP(Process& target, Overlay& overlay);
+    ESP(Game& game, Overlay& overlay);
     
     void Render();
 
 private:
-    Process& target;
+    Game& game;
     Overlay& overlay;
 
-    void DrawBox(const Entity& ent, int localTeam, float matrix[16]);
+    void DrawBox(const Entity& ent, int localTeam, const Matrix& matrix);
     void DrawHealthBar(const Vec2& screenTop, float height, float width, int health);
 };

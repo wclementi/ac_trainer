@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <d3d11.h>
+#include <wrl/client.h>
 #include <string>
 
 // Include ImGui
@@ -9,16 +10,18 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
+using Microsoft::WRL::ComPtr;
+
 class Overlay {
 private:
     HWND hwnd = nullptr;
     WNDCLASSEXW wc{};
     
-    // DirectX 11
-    ID3D11Device* g_pd3dDevice = nullptr;
-    ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
-    IDXGISwapChain* g_pSwapChain = nullptr;
-    ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+    // DirectX 11 with Smart Pointers
+    ComPtr<ID3D11Device> g_pd3dDevice;
+    ComPtr<ID3D11DeviceContext> g_pd3dDeviceContext;
+    ComPtr<IDXGISwapChain> g_pSwapChain;
+    ComPtr<ID3D11RenderTargetView> g_mainRenderTargetView;
     
     int screenWidth = 1920;
     int screenHeight = 1080;
