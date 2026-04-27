@@ -7,8 +7,8 @@
 Aimbot::Aimbot(Process& target) : target(target) {}
 
 void Aimbot::Update() {
-    // Only aim if Right Mouse Button is held
-    if (!(GetAsyncKeyState(VK_RBUTTON) & 0x8000)) {
+    // Aim if either Right Mouse Button or Left Mouse Button is held
+    if (!(GetAsyncKeyState(VK_RBUTTON) & 0x8000) && !(GetAsyncKeyState(VK_LBUTTON) & 0x8000)) {
         return;
     }
 

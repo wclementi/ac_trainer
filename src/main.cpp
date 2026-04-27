@@ -33,9 +33,12 @@ int main() {
     Aimbot aimbot(target);
 
     std::cout << "[+] Overlay initialized. Trainer is active!" << std::endl;
-    std::cout << "[+] ESP is active. Aimbot trigger: [Right Mouse Button]" << std::endl;
+    std::cout << "[+] Aimbot trigger: [Left Click] or [Right Click]" << std::endl;
+    std::cout << "[+] Exit trainer: [INSERT]" << std::endl;
 
     while (overlay.StartFrame()) {
+        if (GetAsyncKeyState(VK_INSERT) & 0x8000) break;
+
         overlay.UpdateOverlayPosition(targetHwnd);
 
         esp.Render();
