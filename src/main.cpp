@@ -1,6 +1,7 @@
 #include "proc.h"
 #include "overlay.h"
 #include "esp.h"
+#include "aimbot.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -29,13 +30,16 @@ int main() {
 
     Overlay overlay(L"AC_ESP_Overlay", L"AC_ESP_Class");
     ESP esp(target, overlay);
+    Aimbot aimbot(target);
 
-    std::cout << "[+] Overlay initialized. ESP is active!" << std::endl;
+    std::cout << "[+] Overlay initialized. Trainer is active!" << std::endl;
+    std::cout << "[+] ESP is active. Aimbot trigger: [Right Mouse Button]" << std::endl;
 
     while (overlay.StartFrame()) {
         overlay.UpdateOverlayPosition(targetHwnd);
 
         esp.Render();
+        aimbot.Update();
 
         overlay.EndFrame();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
