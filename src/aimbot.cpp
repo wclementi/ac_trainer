@@ -4,7 +4,7 @@
 #include <limits>
 #include <iostream>
 
-Aimbot::Aimbot(Process& target) : target(target) {}
+Aimbot::Aimbot(Process& target, float fov) : target(target), fov(fov) {}
 
 void Aimbot::Update() {
     // Aim if either Right Mouse Button or Left Mouse Button is held
@@ -57,6 +57,9 @@ uint32_t Aimbot::GetBestTarget(uintptr_t baseAddr, uint32_t localPlayer, int loc
         float diffPitch = std::abs(currentAngles.y - requiredAngles.y);
         
         float angleDistance = std::sqrt(diffYaw * diffYaw + diffPitch * diffPitch);
+
+        // Check if target is within FOV radius
+        if (angleDistance > fov) continue;
 
         if (angleDistance < closestAngleDistance) {
             closestAngleDistance = angleDistance;
