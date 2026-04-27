@@ -12,3 +12,4 @@
 #define NOMINMAX
 #include <windows.h>
 #include <tlhelp32.h>
+#include <wrl/client.h>

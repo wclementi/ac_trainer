@@ -1,4 +1,4 @@
-#include "proc.h"
+#include "game.h"
 #include "overlay.h"
 #include "esp.h"
 #include "aimbot.h"
@@ -7,7 +7,8 @@
 #include <chrono>
 
 int main() {
-    SetProcessDPIAware();
+    // Set modern DPI awareness
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     
     std::cout << "--- Assault Cube External ESP ---" << std::endl;
 
@@ -28,9 +29,10 @@ int main() {
         return 1;
     }
 
+    Game game(target);
     Overlay overlay(L"AC_ESP_Overlay", L"AC_ESP_Class");
-    ESP esp(target, overlay);
-    Aimbot aimbot(target, 15.0f); // 15 degree FOV radius
+    ESP esp(game, overlay);
+    Aimbot aimbot(game, target, 15.0f);
 
     std::cout << "[+] Overlay initialized. Trainer is active!" << std::endl;
     std::cout << "[+] Aimbot trigger: [Left Click] or [Right Click]" << std::endl;
@@ -41,8 +43,10 @@ int main() {
 
         overlay.UpdateOverlayPosition(targetHwnd);
 
-        esp.Render();
-        aimbot.Update();
+        if (game.Update()) {
+            esp.Render();
+            aimbot.Update();
+        }
 
         overlay.EndFrame();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
