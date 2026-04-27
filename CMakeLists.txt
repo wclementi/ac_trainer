@@ -36,6 +36,9 @@ set(SOURCES
     src/proc.cpp
     src/geom.cpp
     src/overlay.cpp
+    src/esp.cpp
+    src/aimbot.cpp
+    src/game.cpp
     ${IMGUI_SOURCES}
 )
 

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "overlay.h"
 #include <dwmapi.h>
 #include <iostream>
@@ -63,7 +64,7 @@ Overlay::Overlay(const wchar_t* title, const wchar_t* className) {
     ImGui::StyleColorsDark();
 
     ImGui_ImplWin32_Init(hwnd);
-    ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+    ImGui_ImplDX11_Init(g_pd3dDevice.Get(), g_pd3dDeviceContext.Get());
 }
 
 Overlay::~Overlay() {
@@ -108,22 +109,21 @@ bool Overlay::CreateDeviceD3D() {
 
 void Overlay::CleanupDeviceD3D() {
     CleanupRenderTarget();
-    if (g_pSwapChain) { g_pSwapChain->Release(); g_pSwapChain = nullptr; }
-    if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = nullptr; }
-    if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = nullptr; }
+    g_pSwapChain.Reset();
+    g_pd3dDeviceContext.Reset();
+    g_pd3dDevice.Reset();
 }
 
 void Overlay::CreateRenderTarget() {
-    ID3D11Texture2D* pBackBuffer;
+    ComPtr<ID3D11Texture2D> pBackBuffer;
     g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
     if (pBackBuffer) {
-        g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
-        pBackBuffer->Release();
+        g_pd3dDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &g_mainRenderTargetView);
     }
 }
 
 void Overlay::CleanupRenderTarget() {
-    if (g_mainRenderTargetView) { g_mainRenderTargetView->Release(); g_mainRenderTargetView = nullptr; }
+    g_mainRenderTargetView.Reset();
 }
 
 bool Overlay::StartFrame() {
@@ -145,8 +145,8 @@ bool Overlay::StartFrame() {
 void Overlay::EndFrame() {
     ImGui::Render();
     const float clear_color_with_alpha[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; // Transparent clear color
-    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
-    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
+    g_pd3dDeviceContext->OMSetRenderTargets(1, g_mainRenderTargetView.GetAddressOf(), nullptr);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView.Get(), clear_color_with_alpha);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     g_pSwapChain->Present(1, 0); // Present with vsync
 }
@@ -175,7 +175,6 @@ void Overlay::UpdateOverlayPosition(HWND targetHwnd) {
         }
 
         // Position overlay to match the client area exactly
-        // Use SWP_NOACTIVATE to prevent the overlay from taking focus from the game
         SetWindowPos(hwnd, HWND_TOPMOST, topLeft.x, topLeft.y, screenWidth, screenHeight, SWP_NOACTIVATE | SWP_SHOWWINDOW);
     }
 }
