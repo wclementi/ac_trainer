@@ -41,6 +41,7 @@ public:
 
     // Resize and move overlay to match target game window
     void UpdateOverlayPosition(HWND targetHwnd);
+    void SetInteractive(bool interactive);
 
     // Getters
     HWND GetHwnd() const { return hwnd; }

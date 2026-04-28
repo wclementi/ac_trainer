@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "aimbot.h"
 #include "offsets.h"
+#include "config.h"
 #include <limits>
 #include <iostream>
 
 Aimbot::Aimbot(Game& game, Process& target, float fov) : game(game), target(target), fov(fov) {}
 
 void Aimbot::Update() {
+    if (!config.aimbotEnabled) return;
+
     // Aim if either Right Mouse Button or Left Mouse Button is held
     if (!(GetAsyncKeyState(VK_RBUTTON) & 0x8000) && !(GetAsyncKeyState(VK_LBUTTON) & 0x8000)) {
         return;
@@ -43,7 +46,7 @@ uint32_t Aimbot::GetBestTarget() {
         float angleDistance = std::sqrt(diffYaw * diffYaw + diffPitch * diffPitch);
 
         // Check if target is within FOV radius
-        if (angleDistance > fov) continue;
+        if (angleDistance > config.aimbotFov) continue;
 
         if (angleDistance < closestAngleDistance) {
             closestAngleDistance = angleDistance;

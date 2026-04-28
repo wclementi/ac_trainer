@@ -3,7 +3,12 @@
 #include "esp.h"
 #include "aimbot.h"
 #include "effects.h"
+#include "config.h"
+#include "menu.h"
 #include <iostream>
+
+Config config;
+
 #include <thread>
 #include <chrono>
 
@@ -35,15 +40,25 @@ int main() {
     ESP esp(game, overlay);
     Aimbot aimbot(game, target, 15.0f);
     VisualEffects effects;
+    Menu menu;
 
     std::cout << "[+] Overlay initialized. Trainer is active!" << std::endl;
-    std::cout << "[+] Aimbot trigger: [Left Click] or [Right Click]" << std::endl;
-    std::cout << "[+] Exit trainer: [INSERT]" << std::endl;
+    std::cout << "[+] Menu trigger: [INSERT]" << std::endl;
+    std::cout << "[+] Exit trainer: [DELETE] (Hold)" << std::endl;
 
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
+    bool insertPressed = false;
 
     while (overlay.StartFrame()) {
-        if (GetAsyncKeyState(VK_INSERT) & 0x8000) break;
+        if (GetAsyncKeyState(VK_DELETE) & 0x8000) break;
+
+        // Toggle menu
+        bool insertDown = (GetAsyncKeyState(VK_INSERT) & 0x8000);
+        if (insertDown && !insertPressed) {
+            config.menuVisible = !config.menuVisible;
+            overlay.SetInteractive(config.menuVisible);
+        }
+        insertPressed = insertDown;
 
         auto currentFrameTime = std::chrono::high_resolution_clock::now();
         float deltaTime = std::chrono::duration<float>(currentFrameTime - lastFrameTime).count();
@@ -63,6 +78,8 @@ int main() {
             effects.Update(deltaTime);
             effects.Render(state.viewMatrix, overlay.GetWidth(), overlay.GetHeight(), aimbot.GetFov(), state.gameFov);
             aimbot.Update();
+            
+            menu.Render();
         }
 
         overlay.EndFrame();
