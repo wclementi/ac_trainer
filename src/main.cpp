@@ -61,7 +61,7 @@ int main() {
 
             esp.Render();
             effects.Update(deltaTime);
-            effects.Render(state.viewMatrix, overlay.GetWidth(), overlay.GetHeight());
+            effects.Render(state.viewMatrix, overlay.GetWidth(), overlay.GetHeight(), aimbot.GetFov(), state.gameFov);
             aimbot.Update();
         }
 

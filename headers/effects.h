@@ -16,7 +16,7 @@ public:
     void TriggerHitmarker();
     
     void Update(float deltaTime);
-    void Render(const Matrix& viewMatrix, int screenWidth, int screenHeight);
+    void Render(const Matrix& viewMatrix, int screenWidth, int screenHeight, float aimbotFov, float gameFov);
 
 private:
     std::vector<FloatingText> damageNumbers;

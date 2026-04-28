@@ -13,6 +13,7 @@ bool Game::Update() {
     state.entityListPtr = target.Read<uint32_t>(baseAddr + offsets::entityList);
 
     target.ReadBuffer(baseAddr + offsets::viewMatrix, &state.viewMatrix, sizeof(state.viewMatrix));
+    state.gameFov = target.Read<float>(baseAddr + offsets::fov);
 
     if (!state.localPlayerPtr) return false;
 

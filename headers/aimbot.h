@@ -6,6 +6,7 @@ public:
     Aimbot(Game& game, Process& target, float fov = 360.0f);
     
     void Update();
+    float GetFov() const { return fov; }
 
 private:
     Game& game;

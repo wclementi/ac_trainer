@@ -10,6 +10,18 @@ void ESP::Render() {
 
     for (const auto& ent : state.entities) {
         DrawBox(ent, state.localTeam, state.viewMatrix);
+        
+        // Draw Snapline (from bottom center to enemy feet)
+        Vec2 screenBot;
+        if (WorldToScreen(ent.feetPos, screenBot, state.viewMatrix, overlay.GetWidth(), overlay.GetHeight())) {
+            ImU32 snapColor = (ent.team == state.localTeam) ? IM_COL32(0, 255, 0, 100) : IM_COL32(255, 0, 0, 100);
+            ImGui::GetBackgroundDrawList()->AddLine(
+                ImVec2(overlay.GetWidth() / 2.0f, (float)overlay.GetHeight()),
+                ImVec2(screenBot.x, screenBot.y),
+                snapColor,
+                1.0f
+            );
+        }
     }
 }
 

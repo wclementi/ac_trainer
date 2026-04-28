@@ -16,6 +16,7 @@ struct GameState {
     int playerCount;
     uint32_t entityListPtr;
     Matrix viewMatrix;
+    float gameFov;
     std::vector<Entity> entities;
     std::vector<DamageEvent> damageEvents;
 };

@@ -35,8 +35,20 @@ void VisualEffects::Update(float deltaTime) {
     }
 }
 
-void VisualEffects::Render(const Matrix& viewMatrix, int screenWidth, int screenHeight) {
+void VisualEffects::Render(const Matrix& viewMatrix, int screenWidth, int screenHeight, float aimbotFov, float gameFov) {
     auto drawList = ImGui::GetBackgroundDrawList();
+
+    // Render Aimbot FOV Circle
+    if (aimbotFov > 0.0f && gameFov > 0.0f) {
+        float centerX = screenWidth / 2.0f;
+        float centerY = screenHeight / 2.0f;
+        
+        // Calculate radius in pixels: (Width / GameFOV) * AimbotFOV
+        // Note: This is a simplification but works well for low FOVs
+        float radius = (screenWidth / gameFov) * aimbotFov;
+        
+        drawList->AddCircle(ImVec2(centerX, centerY), radius, IM_COL32(200, 200, 200, 80), 64, 1.0f);
+    }
 
     // Render Hitmarker (Center of screen)
     if (hitmarkerAlpha > 0.0f) {
