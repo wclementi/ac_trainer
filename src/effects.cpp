@@ -44,7 +44,14 @@ void VisualEffects::Render(const Matrix& viewMatrix, int screenWidth, int screen
         float centerX = screenWidth / 2.0f;
         float centerY = screenHeight / 2.0f;
         
-        float radius = (screenWidth / gameFov) * aimbotFov;
+        // Correct trigonometric FOV calculation
+        // Radius = tan(AimbotFOV_Rad / 2) / tan(GameFOV_Rad / 2) * (ScreenWidth / 2)
+        const float PI = 3.1415926535f;
+        float aimbotFovRad = (aimbotFov / 2.0f) * (PI / 180.0f);
+        float gameFovRad = (gameFov / 2.0f) * (PI / 180.0f);
+        
+        float radius = (tanf(aimbotFovRad) / tanf(gameFovRad)) * (screenWidth / 2.0f);
+        
         drawList->AddCircle(ImVec2(centerX, centerY), radius, IM_COL32(200, 200, 200, 80), 64, 1.0f);
     }
 

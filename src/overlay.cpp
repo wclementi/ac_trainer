@@ -60,6 +60,7 @@ Overlay::Overlay(const wchar_t* title, const wchar_t* className) {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     ImGui::StyleColorsDark();
     io.FontGlobalScale = 1.25f;
 

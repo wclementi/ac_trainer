@@ -10,13 +10,30 @@
 Config config;
 
 #include <thread>
+#include <mutex>
+#include <atomic>
 #include <chrono>
+
+std::mutex gameMutex;
+GameState sharedState;
+std::atomic<bool> running = true;
+
+void LogicLoop(Game& game, Aimbot& aimbot, int width, int height) {
+    while (running) {
+        if (game.Update(width, height)) {
+            std::lock_guard<std::mutex> lock(gameMutex);
+            sharedState = game.GetState();
+        }
+        aimbot.Update();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+}
 
 int main() {
     // Set modern DPI awareness
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     
-    std::cout << "--- Assault Cube External ESP ---" << std::endl;
+    std::cout << "--- Assault Cube External Multi-Threaded Trainer ---" << std::endl;
 
     const wchar_t* targetProc = L"ac_client.exe";
     Process target(targetProc);
@@ -38,7 +55,7 @@ int main() {
     Game game(target);
     Overlay overlay(L"AC_ESP_Overlay", L"AC_ESP_Class");
     ESP esp(game, overlay);
-    Aimbot aimbot(game, target, 15.0f);
+    Aimbot aimbot(game, target);
     VisualEffects effects;
     Menu menu;
 
@@ -46,11 +63,17 @@ int main() {
     std::cout << "[+] Menu trigger: [INSERT]" << std::endl;
     std::cout << "[+] Exit trainer: [DELETE] (Hold)" << std::endl;
 
+    // Start Logic Thread
+    std::thread logicThread(LogicLoop, std::ref(game), std::ref(aimbot), overlay.GetWidth(), overlay.GetHeight());
+
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
     bool insertPressed = false;
 
     while (overlay.StartFrame()) {
-        if (GetAsyncKeyState(VK_DELETE) & 0x8000) break;
+        if (GetAsyncKeyState(VK_DELETE) & 0x8000) {
+            running = false;
+            break;
+        }
 
         // Toggle menu
         bool insertDown = (GetAsyncKeyState(VK_INSERT) & 0x8000);
@@ -66,25 +89,31 @@ int main() {
 
         overlay.UpdateOverlayPosition(targetHwnd);
 
-        if (game.Update()) {
-            const auto& state = game.GetState();
-            
-            // Process damage events
-            for (const auto& event : state.damageEvents) {
-                effects.AddDamage(event.pos, event.amount);
-            }
-
-            esp.Render();
-            effects.Update(deltaTime);
-            effects.Render(state.viewMatrix, overlay.GetWidth(), overlay.GetHeight(), aimbot.GetFov(), state.gameFov);
-            aimbot.Update();
-            
-            menu.Render();
+        // UI Loop
+        GameState localState;
+        {
+            std::lock_guard<std::mutex> lock(gameMutex);
+            localState = sharedState;
         }
 
+        // Process damage events from the logic thread
+        for (const auto& event : localState.damageEvents) {
+            effects.AddDamage(event.pos, event.amount);
+        }
+
+        esp.Render(localState);
+        effects.Update(deltaTime);
+        effects.Render(localState.viewMatrix, overlay.GetWidth(), overlay.GetHeight(), aimbot.GetFov(), localState.gameFov);
+        
+        menu.Render();
+
         overlay.EndFrame();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        // UI thread sleeps less to stay responsive
+        std::this_thread::yield();
     }
+
+    running = false;
+    if (logicThread.joinable()) logicThread.join();
 
     return 0;
 }

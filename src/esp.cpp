@@ -6,10 +6,8 @@
 
 ESP::ESP(Game& game, Overlay& overlay) : game(game), overlay(overlay) {}
 
-void ESP::Render() {
+void ESP::Render(const GameState& state) {
     if (!config.espEnabled) return;
-
-    const auto& state = game.GetState();
 
     for (const auto& ent : state.entities) {
         DrawBox(ent, state.localTeam, state.viewMatrix);

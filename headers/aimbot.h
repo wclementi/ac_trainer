@@ -3,10 +3,10 @@
 
 class Aimbot {
 public:
-    Aimbot(Game& game, Process& target, float fov = 360.0f);
+    Aimbot(Game& game, Process& target);
     
     void Update();
-    float GetFov() const { return fov; }
+    float GetFov() const;
 
 private:
     Game& game;

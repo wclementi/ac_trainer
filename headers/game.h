@@ -17,6 +17,8 @@ struct GameState {
     uint32_t entityListPtr;
     Matrix viewMatrix;
     float gameFov;
+    int screenWidth;
+    int screenHeight;
     std::vector<Entity> entities;
     std::vector<DamageEvent> damageEvents;
 };
@@ -25,7 +27,7 @@ class Game {
 public:
     Game(Process& target);
     
-    bool Update();
+    bool Update(int width, int height);
     const GameState& GetState() const { return state; }
 
 private:

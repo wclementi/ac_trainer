@@ -8,7 +8,7 @@ class ESP {
 public:
     ESP(Game& game, Overlay& overlay);
     
-    void Render();
+    void Render(const GameState& state);
 
 private:
     Game& game;
