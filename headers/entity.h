@@ -11,6 +11,7 @@ struct Entity {
     // Offsets updated for Assault Cube v1.3.0.2 based on RE
     char name[16];          // offsets::name
     int health;             // offsets::health
+    int prevHealth;         // To detect health drops
     int armor;              // offsets::armor
     int team;               // offsets::team
     

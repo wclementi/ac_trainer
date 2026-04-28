@@ -39,6 +39,7 @@ set(SOURCES
     src/esp.cpp
     src/aimbot.cpp
     src/game.cpp
+    src/effects.cpp
     ${IMGUI_SOURCES}
 )
 

@@ -34,6 +34,25 @@ void ESP::DrawBox(const Entity& ent, int localTeam, const Matrix& matrix) {
             0.0f, 0, 1.5f
         );
 
+        // Draw Name below box
+        std::string nameStr(ent.name);
+        ImVec2 textSize = ImGui::CalcTextSize(nameStr.c_str());
+        ImVec2 textPos = ImVec2(screenTop.x - textSize.x / 2, screenBot.y + 2);
+        
+        // Shadow
+        ImGui::GetBackgroundDrawList()->AddText(
+            ImVec2(textPos.x + 1, textPos.y + 1),
+            IM_COL32(0, 0, 0, 255),
+            nameStr.c_str()
+        );
+        
+        // Main Text
+        ImGui::GetBackgroundDrawList()->AddText(
+            textPos,
+            IM_COL32(255, 255, 255, 255),
+            nameStr.c_str()
+        );
+
         DrawHealthBar(screenTop, height, width, ent.health);
     }
 }

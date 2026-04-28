@@ -2,6 +2,7 @@
 #include "overlay.h"
 #include "esp.h"
 #include "aimbot.h"
+#include "effects.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -33,18 +34,34 @@ int main() {
     Overlay overlay(L"AC_ESP_Overlay", L"AC_ESP_Class");
     ESP esp(game, overlay);
     Aimbot aimbot(game, target, 15.0f);
+    VisualEffects effects;
 
     std::cout << "[+] Overlay initialized. Trainer is active!" << std::endl;
     std::cout << "[+] Aimbot trigger: [Left Click] or [Right Click]" << std::endl;
     std::cout << "[+] Exit trainer: [INSERT]" << std::endl;
 
+    auto lastFrameTime = std::chrono::high_resolution_clock::now();
+
     while (overlay.StartFrame()) {
         if (GetAsyncKeyState(VK_INSERT) & 0x8000) break;
+
+        auto currentFrameTime = std::chrono::high_resolution_clock::now();
+        float deltaTime = std::chrono::duration<float>(currentFrameTime - lastFrameTime).count();
+        lastFrameTime = currentFrameTime;
 
         overlay.UpdateOverlayPosition(targetHwnd);
 
         if (game.Update()) {
+            const auto& state = game.GetState();
+            
+            // Process damage events
+            for (const auto& event : state.damageEvents) {
+                effects.AddDamage(event.pos, event.amount);
+            }
+
             esp.Render();
+            effects.Update(deltaTime);
+            effects.Render(state.viewMatrix, overlay.GetWidth(), overlay.GetHeight());
             aimbot.Update();
         }
 
