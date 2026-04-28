@@ -58,10 +58,10 @@ Overlay::Overlay(const wchar_t* title, const wchar_t* className) {
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.IniFilename = nullptr; // Disable ini file
-
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = nullptr;
     ImGui::StyleColorsDark();
+    io.FontGlobalScale = 1.25f;
 
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice.Get(), g_pd3dDeviceContext.Get());

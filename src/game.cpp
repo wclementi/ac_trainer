@@ -13,6 +13,7 @@ bool Game::Update() {
     state.entityListPtr = target.Read<uint32_t>(baseAddr + offsets::entityList);
 
     target.ReadBuffer(baseAddr + offsets::viewMatrix, &state.viewMatrix, sizeof(state.viewMatrix));
+    state.gameFov = target.Read<float>(baseAddr + offsets::fov);
 
     if (!state.localPlayerPtr) return false;
 
@@ -23,8 +24,10 @@ bool Game::Update() {
 
 bool Game::UpdateEntities() {
     state.entities.clear();
+    state.damageEvents.clear();
     
-    // We start from 1 to skip local player (index 0 is often local or empty in AC)
+    std::vector<Entity> newEntities;
+
     for (int i = 1; i < state.playerCount; ++i) {
         uint32_t entPtr = target.Read<uint32_t>(state.entityListPtr + i * 4);
         if (!entPtr) continue;
@@ -38,11 +41,31 @@ bool Game::UpdateEntities() {
         ent.team = target.Read<int>(entPtr + offsets::team);
         ent.headPos = target.Read<Vec3>(entPtr + offsets::headPos);
         ent.feetPos = target.Read<Vec3>(entPtr + offsets::feetPos);
-        
-        // Read name
         target.ReadBuffer(entPtr + offsets::name, &ent.name, sizeof(ent.name));
 
-        state.entities.push_back(ent);
+        // Find in cache to check for damage
+        bool found = false;
+        for (auto& cachedEnt : entityCache) {
+            if (cachedEnt.baseAddress == ent.baseAddress) {
+                ent.prevHealth = cachedEnt.health;
+                
+                // Detect damage
+                if (ent.health < ent.prevHealth) {
+                    state.damageEvents.push_back({ ent.headPos, ent.prevHealth - ent.health });
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            ent.prevHealth = ent.health;
+        }
+
+        newEntities.push_back(ent);
     }
+
+    state.entities = newEntities;
+    entityCache = newEntities;
     return true;
 }
