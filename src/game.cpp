@@ -3,7 +3,7 @@
 
 Game::Game(Process& target) : target(target), state{} {}
 
-bool Game::Update() {
+bool Game::Update(int width, int height) {
     uintptr_t baseAddr = target.GetBaseAddress();
     if (!baseAddr) return false;
 
@@ -11,9 +11,11 @@ bool Game::Update() {
     state.localPlayerPtr = target.Read<uint32_t>(baseAddr + offsets::localPlayer);
     state.playerCount = target.Read<int>(baseAddr + offsets::playerCount);
     state.entityListPtr = target.Read<uint32_t>(baseAddr + offsets::entityList);
+    state.gameFov = target.Read<float>(baseAddr + offsets::fov);
+    state.screenWidth = width;
+    state.screenHeight = height;
 
     target.ReadBuffer(baseAddr + offsets::viewMatrix, &state.viewMatrix, sizeof(state.viewMatrix));
-    state.gameFov = target.Read<float>(baseAddr + offsets::fov);
 
     if (!state.localPlayerPtr) return false;
 
