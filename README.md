@@ -18,7 +18,7 @@ For rendering and user interface, the trainer uses **ImGui** and **DirectX 11**.
   * Automated targeting within a configurable Field of View (FOV)
   * Visual FOV circle
 * **Visual Effects**
-  * Floating damage numbers (RPG style)
+  * Floating damage numbers 
   * Hitmarkers
 
 ## 🛠️ Prerequisites & Setup
@@ -61,8 +61,8 @@ Open `build/html/index.html` in your web browser to view the documentation.
 4. The overlay should appear on top of your game. Press the configured menu key (usually `Insert` or `Home`) to open the ImGui configuration menu.
 
 ## 📚 Sources and Inspiration
-* **[Guided Hacking](https://guidedhacking.com/) / [Guided Hacking YouTube](https://www.youtube.com/c/GuidedHacking)** - Primary source of inspiration and educational material on memory editing, pointer scanning, and game hacking fundamentals.
-* **[Cazz's YouTube Channel](https://www.youtube.com/c/cazz)** - Excellent resource for game hacking tutorials, including this [External ESP & Aimbot Playlist](https://www.youtube.com/watch?v=nFHCZ4H1TQQ&list=PLZl6v3tLR5b77nOayeMFHnNIsztC3lrdJ).
+* **[Guided Hacking YouTube](https://www.youtube.com/c/GuidedHacking)** - Primary source of inspiration and educational material on memory editing, pointer scanning, and game hacking fundamentals.
+* **[Cazz's YouTube Channel](https://www.youtube.com/@cazz)** - Excellent resource for game hacking tutorials
 * **[UnknownCheats - Other FPS Games Forum](https://www.unknowncheats.me/forum/other-fps-games/)** - General discussion, offset finding techniques, and resources for Assault Cube.
 * **[ImGui (ocornut)](https://github.com/ocornut/imgui)** - Used for the graphical user interface and overlay rendering.
 * **Assault Cube (v1.3.0.2)** - The open-source FPS game used as the target for this trainer.
