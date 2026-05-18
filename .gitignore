@@ -53,3 +53,6 @@ _deps/
 *.sln.docstates
 *.pdb
 *.ilk
+
+# AI Agent Context
+.ai_context.md
