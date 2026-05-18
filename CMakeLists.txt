@@ -40,6 +40,7 @@ set(SOURCES
     src/aimbot.cpp
     src/game.cpp
     src/effects.cpp
+    src/menu.cpp
     ${IMGUI_SOURCES}
 )
 
@@ -64,3 +65,25 @@ target_link_libraries(${PROJECT_NAME} PRIVATE d3d11 d3dcompiler dwmapi)
 if(MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE "/MANIFESTUAC:level='requireAdministrator' uiAccess='false'")
 endif()
+
+# Setup documentation generation
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    # Generate an HTML version, avoid XML for now
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_XML NO)
+    set(DOXYGEN_EXTRACT_ALL YES)
+
+    # Exclude third-party libraries from the docs
+    set(DOXYGEN_EXCLUDE_PATTERNS "*/imgui/*" "*/backends/*")
+    
+    # Create the 'docs' build target
+    doxygen_add_docs(
+        docs
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        COMMENT "Generate HTML documentation using Doxygen"
+    )
+endif()
+

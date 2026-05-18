@@ -60,6 +60,7 @@ Overlay::Overlay(const wchar_t* title, const wchar_t* className) {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     ImGui::StyleColorsDark();
     io.FontGlobalScale = 1.25f;
 
@@ -176,5 +177,21 @@ void Overlay::UpdateOverlayPosition(HWND targetHwnd) {
 
         // Position overlay to match the client area exactly
         SetWindowPos(hwnd, HWND_TOPMOST, topLeft.x, topLeft.y, screenWidth, screenHeight, SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    }
+}
+
+void Overlay::SetInteractive(bool interactive) {
+    LONG_PTR exStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+    if (interactive) {
+        // Remove click-through and set layered
+        exStyle &= ~WS_EX_TRANSPARENT;
+        SetWindowLongPtr(hwnd, GWL_EXSTYLE, exStyle);
+        
+        // Ensure the window can receive focus if needed, but keep it topmost
+        SetForegroundWindow(hwnd);
+    } else {
+        // Add click-through
+        exStyle |= WS_EX_TRANSPARENT;
+        SetWindowLongPtr(hwnd, GWL_EXSTYLE, exStyle);
     }
 }
