@@ -1,10 +1,13 @@
 #include "proc.h"
 
 // Constructor: Initializes the process ID and opens a handle
-Process::Process(const wchar_t *procName) : procId(0), hProcess(nullptr) {
+Process::Process(const wchar_t *procName) : procId(0), hProcess(nullptr), baseAddress(0) {
   procId = GetProcId(procName);
   if (procId != 0) {
     hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procId);
+    if (hProcess) {
+      baseAddress = GetModuleBaseAddress(procName);
+    }
   }
 }
 
