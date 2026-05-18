@@ -54,5 +54,5 @@ _deps/
 *.pdb
 *.ilk
 
-# AI Agent Context
+# AI Context
 .ai_context.md
